@@ -1,0 +1,195 @@
+swagger: '2.0'
+host: 'c6f7fccf41484b47b97e9cc623cf7f5e-cn-hangzhou.alicloudapi.com'
+basePath: /
+info:
+  version: '0.1'
+  title: Aliyun Api Gateway Swagger Sample
+schemes:
+  - http
+  - https
+x-aliyun-apigateway-paramater-handling: MAPPING
+x-aliyun-apigateway-api-market-enable: false
+x-aliyun-apigateway-api-force-nonce-check: false
+x-aliyun-apigateway-backend:
+  type: HTTP
+  address: '44650405-1585714933323637.test.functioncompute.com'
+  method: get
+  timeout: 10000
+paths:
+  '/http/get/mapping/{userId}':
+    get:
+      operationId: case1
+      schemes:
+        - http
+        - https
+      x-aliyun-apigateway-parameter-handling: MAPPING
+      x-aliyun-apigateway-api-market-enable: true
+      x-aliyun-apigateway-auth-type: ANONYMOUS
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: swaggerQuery
+          in: query
+          required: false
+          default: '123465'
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+        - name: swaggerHeader
+          in: header
+          required: false
+          type: number
+          format: double
+          minimum: 0.1
+          maximum: 0.5
+          x-aliyun-apigateway-backend-location: query
+          x-aliyun-apigateway-backend-name: backendQuery
+      x-aliyun-apigateway-constant-parameters:
+        - backendName: swaggerConstant
+          value: swaggerConstant
+          location: header
+          description: description of swagger
+      x-aliyun-apigateway-system-parameters:
+        - systemName: CaAppId
+          backendName: appId
+          location: header
+      responses:
+        '200':
+          description: 200 description
+        '400':
+          description: 400 description
+  '/echo/test/post/{userId}':
+    post:
+      operationId: testpost
+      schemes:
+        - http
+        - https
+      x-aliyun-apigateway-parameter-handling: MAPPING
+      x-aliyun-apigateway-backend:
+        type: HTTP
+        address: '44650405-1585714933323637.test.functioncompute.com'
+        method: post
+        timeout: 10000
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          type: string
+        - name: swaggerQuery1
+          in: query
+          required: false
+          default: '123465'
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+          x-aliyun-apigateway-enum: 1,2,3
+        - name: swaggerQuery2
+          in: query
+          required: false
+          type: string
+          x-aliyun-apigateway-backend-location: header
+          x-aliyun-apigateway-backend-name: backendHeader
+          x-aliyun-apigateway-query-schema:
+            $ref: '#/definitions/AiGeneratePicQueryVO'
+        - name: swaggerHeader
+          in: header
+          required: false
+          type: number
+          format: double
+          minimum: 0.1
+          maximum: 0.5
+          x-aliyun-apigateway-backend-location: query
+          x-aliyun-apigateway-backend-name: backendQuery
+        - name: swaggerFormdata
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 200 description
+          schema:
+            $ref: '#/definitions/ResultOfGeneratePicturesVO'
+        '400':
+          description: 400 description
+    x-aliyun-apigateway-any-method:
+      operationId: case2
+      schemes:
+        - http
+        - https
+      x-aliyun-apigateway-parameter-handling: MAPPING
+      x-aliyun-apigateway-backend:
+        type: HTTP
+        address: 'http://www.aliyun.com'
+        path: '/builtin/echo/{abc}'
+        method: post
+        timeout: 10000
+      parameters:
+        - name: userId
+          in: path
+          required: false
+          default: '123465'
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+          x-aliyun-apigateway-backend-name: abc
+          x-aliyun-apigateway-backend-location: path
+      responses:
+        '200':
+          description: 200 description
+        '400':
+          description: 400 description
+definitions:
+  AiGeneratePicQueryVO:
+    type: object
+    properties:
+      transactionId:
+        type: string
+        description: 异步任务ID
+  GeneratePictureVO:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 图片ID
+      name:
+        type: string
+        description: 图片名称
+  GeneratePicturesVO:
+    type: object
+    properties:
+      failSize:
+        type: integer
+        format: int64
+        description: 失败数量
+      list:
+        type: array
+        description: 图片列表
+        items:
+          $ref: '#/definitions/GeneratePictureVO'
+          title: GeneratePictureVO
+      successSize:
+        type: integer
+        format: int32
+        description: 成功数量
+      totalSize:
+        type: number
+        format: float
+        description: 请求总数
+  ResultOfGeneratePicturesVO:
+    type: object
+    properties:
+      model:
+        description: 返回内容
+        $ref: '#/definitions/GeneratePicturesVO'
+        title: GeneratePicturesVO
+      requestId:
+        type: string
+        description: 请求ID
