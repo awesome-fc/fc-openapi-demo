@@ -16,3 +16,4 @@ This project demonstrates how to build functions from OpenAPI spec and expose th
 7. Use the swagger UI to debug the API.
 
 
+![](function-by-openapi2.gif)
